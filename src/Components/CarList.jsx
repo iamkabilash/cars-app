@@ -4,11 +4,16 @@ import { removeCar } from "../store";
 function CarList() {
   const dispatch = useDispatch();
 
-  const cars = useSelector((state) => {
-    return state.cars.carsList.filter((car) =>
+  const { cars, name } = useSelector((state) => {
+    const filteredCars = state.cars.carsList.filter((car) =>
       car.name.toLowerCase().includes(state.cars.searchterm.toLowerCase())
     );
     // return state.cars.carsList;
+
+    return {
+      cars: filteredCars,
+      name: state.form.name,
+    };
   });
 
   const handleCarDelete = (car) => {
@@ -16,12 +21,14 @@ function CarList() {
   };
 
   const renderedCars = cars.map((car) => {
+    const bold = name && car.name.toLowerCase().includes(name.toLowerCase());
+
     return (
       <div
         key={car.id}
         className="flex flex-row items-center justify-between py-[10px] px-[25px] mt-[40px] my-[10px] rounded-xl bg-gray-100"
       >
-        <p>
+        <p className={bold && "font-bold"}>
           {car.name} - ${car.cost}
         </p>
         <button
